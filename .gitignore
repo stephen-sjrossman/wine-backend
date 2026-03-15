@@ -1,0 +1,7 @@
+.buf-deps/
+backend-bin
+vendor/
+.env
+.vscode/
+.DS_Store
+*.swp
