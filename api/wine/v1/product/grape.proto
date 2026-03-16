@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package wine.v1.product;
+
+option go_package = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/product;winev1product";
+option java_package = "com.sjrossman.wine.v1.product";
+option java_multiple_files = true;
+option java_outer_classname = "GrapePb";
+option swift_prefix = "WineV1Product";
+
+import "google/protobuf/timestamp.proto";
+
+// A grape variety used in winemaking.
+message Grape {
+  // UUID uniquely identifying the Grape.
+  string id = 1;
+
+  // Human-readable name of the grape variety.
+  string name = 2;
+
+  // Create & last update timestamps.
+  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp updated_at = 102;
+}

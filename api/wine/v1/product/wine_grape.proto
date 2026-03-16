@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package wine.v1.product;
+
+option go_package = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/product;winev1product";
+option java_package = "com.sjrossman.wine.v1.product";
+option java_multiple_files = true;
+option java_outer_classname = "WineGrapePb";
+option swift_prefix = "WineV1Product";
+
+import "google/protobuf/timestamp.proto";
+
+// A relationship between a wine and a grape variety used in its production.
+message WineGrape {
+  // UUID uniquely identifying the WineGrape relationship.
+  string id = 1;
+
+  // UUID of the associated Wine.
+  string wine_id = 2;
+
+  // UUID of the associated Grape variety.
+  string grape_id = 3;
+
+  // Percentage of the grape variety used in the wine (0-100).
+  int32 percentage = 4;
+
+  // Create & last update timestamps.
+  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp updated_at = 102;
+}
