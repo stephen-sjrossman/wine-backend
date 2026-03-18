@@ -20,6 +20,9 @@ def proto_libraries(name, srcs, go_base, deps = []):
     importpath = go_base + "/" + name,
     proto = proto_library_dep,
     visibility = ["//visibility:public"],
+    deps = [
+      "//third_party/protovalidate:validate_go_proto",
+    ],
   )
 
   py_proto_library(

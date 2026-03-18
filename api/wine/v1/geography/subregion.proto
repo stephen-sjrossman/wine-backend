@@ -7,22 +7,39 @@ option java_multiple_files = true;
 option java_outer_classname = "SubregionPb";
 option swift_prefix = "WineV1Geography";
 
+import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 // Represents a geographical winemaking subregion.
 message Subregion {
   // UUID uniquely identifying a Subregion.
-  string id = 1;
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // UUID of the Region to which the Subregion belongs.
-  string region_id = 2;
+  string region_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // Human-readable name of the Subregion.
-  string name = 3;
+  string name = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 255
+  ];
 
   // Timestamp at which the Subregion was created.
-  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp created_at = 101 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 
   // Timestamp at which the Subregion was last updated.
-  google.protobuf.Timestamp updated_at = 102;
+  google.protobuf.Timestamp updated_at = 102 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 }

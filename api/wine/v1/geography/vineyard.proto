@@ -7,22 +7,39 @@ option java_multiple_files = true;
 option java_outer_classname = "VineyardPb";
 option swift_prefix = "WineV1Geography";
 
+import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 // Represents a geographical winemaking vineyard.
 message Vineyard {
   // UUID uniquely identifying a Vineyard.
-  string id = 1;
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // UUID of the Appellation to which the Vineyard belongs.
-  string appellation_id = 2;
+  string appellation_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // Human-readable name of the Vineyard.
-  string name = 3;
+  string name = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 255
+  ];
 
   // Timestamp at which the Vineyard was created.
-  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp created_at = 101 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 
   // Timestamp at which the Vineyard was last updated.
-  google.protobuf.Timestamp updated_at = 102;
+  google.protobuf.Timestamp updated_at = 102 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 }

@@ -5,41 +5,59 @@ GO_BASE = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/geography"
 proto_libraries(
     name = "appellation",
     srcs = ["appellation.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )
 
 proto_libraries(
     name = "continent",
     srcs = ["continent.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )
 
 proto_libraries(
     name = "country",
     srcs = ["country.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )
 
 proto_libraries(
     name = "region",
     srcs = ["region.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )
 
 proto_libraries(
     name = "subregion",
     srcs = ["subregion.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )
 
 proto_libraries(
     name = "vineyard",
     srcs = ["vineyard.proto"],
-    deps = ["@protobuf//:timestamp_proto"],
+    deps = [
+        "@protobuf//:timestamp_proto",
+        "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
     go_base = GO_BASE,
 )

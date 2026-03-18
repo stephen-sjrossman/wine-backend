@@ -7,33 +7,56 @@ option java_multiple_files = true;
 option java_outer_classname = "CountryPb";
 option swift_prefix = "WineV1Geography";
 
+import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 // Represents a geographical winemaking country.
 message Country {
   // UUID uniquely identifying a Country.
-  string id = 1;
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // UUID of the Continent to which the Country belongs.
-  string continent_id = 2;
+  string continent_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // Human-readable name of the Country.
-  string name = 3;
+  string name = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 255
+  ];
 
   message Metadata {
     // ISO 3166-1 alpha-2 country code.
-    string iso_code = 1;
+    string iso_code = 1 [
+      (buf.validate.field).required = true,
+      (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    ];
 
     // URL to an image of the Country's flag.
-    string flag_url = 2;
+    string flag_url = 2 [
+      (buf.validate.field).required = true,
+      (buf.validate.field).string.uri = true
+    ];
   }
 
   // Additional metadata about the Country.
-  Metadata metadata = 4;
+  Metadata metadata = 4 [(buf.validate.field).required = true];
 
   // Timestamp at which the Country was created.
-  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp created_at = 101 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 
   // Timestamp at which the Country was last updated.
-  google.protobuf.Timestamp updated_at = 102;
+  google.protobuf.Timestamp updated_at = 102 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 }

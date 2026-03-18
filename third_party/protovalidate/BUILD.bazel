@@ -1,0 +1,14 @@
+load("@rules_go//proto:def.bzl", "go_proto_library")
+
+go_proto_library(
+    name = "validate_go_proto",
+    importpath = "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate",
+    protos = ["@protovalidate//proto/protovalidate/buf/validate:validate_proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@org_golang_google_protobuf//types/known/anypb",
+        "@org_golang_google_protobuf//types/known/durationpb",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_golang_google_protobuf//types/descriptorpb",
+    ],
+)

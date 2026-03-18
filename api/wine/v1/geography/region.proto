@@ -7,22 +7,39 @@ option java_multiple_files = true;
 option java_outer_classname = "RegionPb";
 option swift_prefix = "WineV1Geography";
 
+import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 // Represents a geographical winemaking region.
 message Region {
   // UUID uniquely identifying a Region.
-  string id = 1;
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // UUID of the Country to which the Region belongs.
-  string country_id = 2;
+  string country_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 
   // Human-readable name of the Region.
-  string name = 3;
+  string name = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 255
+  ];
 
   // Timestamp at which the Region was created.
-  google.protobuf.Timestamp created_at = 101;
+  google.protobuf.Timestamp created_at = 101 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 
   // Timestamp at which the Region was last updated.
-  google.protobuf.Timestamp updated_at = 102;
+  google.protobuf.Timestamp updated_at = 102 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).timestamp.gte = {seconds: 1767225600} // Jan 1, 2026
+  ];
 }
