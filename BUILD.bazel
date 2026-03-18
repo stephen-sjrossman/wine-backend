@@ -1,0 +1,21 @@
+# Set the Go import prefix for the whole project
+# gazelle:prefix github.com/stephen-sjrossman/wine-backend
+
+# Tell Gazelle to generate one target per .proto file
+# gazelle:proto file
+
+
+# Load & define the main Gazelle target
+load("@gazelle//:def.bzl", "gazelle")
+gazelle(name = "gazelle")
+
+# Target to sync go.mod dependencies
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)

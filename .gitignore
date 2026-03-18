@@ -4,4 +4,5 @@ vendor/
 .env
 .vscode/
 .DS_Store
+.bazelrc.user
 *.swp

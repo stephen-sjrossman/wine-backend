@@ -1,0 +1,11 @@
+# Enable Bzlmod (the new module system you're using)
+common --enable_bzlmod
+
+# Use prebuilt protoc binaries instead of compiling protoc from source (Saves 10 mins)
+common --@protobuf//bazel/toolchains:prefer_prebuilt_protoc
+
+# Show more detail when a build fails
+build --verbose_failures
+
+# Allow developers to add personal overrides (like local cache paths)
+try-import %workspace%/.bazelrc.user
