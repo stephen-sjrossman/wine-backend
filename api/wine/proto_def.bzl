@@ -1,0 +1,41 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@protobuf//bazel:java_proto_library.bzl", "java_proto_library")
+load("@rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_swift//proto:proto.bzl", "swift_proto_library")
+
+def proto_libraries(name, srcs, go_base, deps = []):
+  proto_library_name = name + "_proto"
+  proto_library_dep = ":" + proto_library_name
+
+  proto_library(
+    name = proto_library_name,
+    srcs = srcs,
+    deps = deps,
+    visibility = ["//visibility:public"],
+  )
+
+  go_proto_library(
+    name = name + "_go_proto",
+    importpath = go_base + "/" + name,
+    proto = proto_library_dep,
+    visibility = ["//visibility:public"],
+  )
+
+  py_proto_library(
+    name = name + "_py_proto",
+    deps = [proto_library_dep],
+    visibility = ["//visibility:public"],
+  )
+
+  java_proto_library(
+    name = name + "_java_proto",
+    deps = [proto_library_dep],
+    visibility = ["//visibility:public"],
+  )
+
+  swift_proto_library(
+    name = name + "_swift_proto",
+    protos = [proto_library_dep],
+    visibility = ["//visibility:public"],
+  )
