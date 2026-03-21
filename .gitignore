@@ -4,5 +4,17 @@ vendor/
 .env
 .vscode/
 .DS_Store
+<<<<<<< HEAD
 .bazelrc.user
+=======
+
+# Bazel build outputs
+.bazelrc.user
+.bazel_cache/
+bazel-backend
+bazel-bin
+bazel-out
+bazel-testlogs
+
+>>>>>>> 1c2e3e0 (Initialize bazel workspace & update .gitignore)
 *.swp
