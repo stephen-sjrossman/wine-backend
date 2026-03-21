@@ -20,6 +20,9 @@ bazel_dep(name = "rules_kotlin", version = "2.3.10")
 # 5. Swift Rules
 bazel_dep(name = "rules_swift", version = "3.5.0")
 
+# CC Rules
+bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
+
 # 6. Go Toolchain Setup
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
 go_sdk.download(version = "1.23.0")

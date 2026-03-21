@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package wine.v1.geography;
+option go_package = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/geography;winev1geography";
+option java_package = "com.sjrossman.wine.v1.geography";
+option java_multiple_files = true;
+option java_outer_classname = "VineyardPb";
+option swift_prefix = "WineV1Geography";
+
+import "google/protobuf/timestamp.proto";
+
+// Represents a geographical winemaking vineyard.
+message Vineyard {
+  // UUID uniquely identifying a Vineyard.
+  string id = 1;
+
+  // UUID of the Appellation to which the Vineyard belongs.
+  string appellation_id = 2;
+
+  // Human-readable name of the Vineyard.
+  string name = 3;
+
+  // Timestamp at which the Vineyard was created.
+  google.protobuf.Timestamp created_at = 101;
+
+  // Timestamp at which the Vineyard was last updated.
+  google.protobuf.Timestamp updated_at = 102;
+}

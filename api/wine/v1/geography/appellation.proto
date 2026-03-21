@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package wine.v1.geography;
+option go_package = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/geography;winev1geography";
+option java_package = "com.sjrossman.wine.v1.geography";
+option java_multiple_files = true;
+option java_outer_classname = "AppellationPb";
+option swift_prefix = "WineV1Geography";
+
+import "google/protobuf/timestamp.proto";
+
+// Represents a geographical winemaking appellation.
+message Appellation {
+  // UUID uniquely identifying an Appellation.
+  string id = 1;
+
+  oneof container {
+    // UUID of the Country to which the Appellation belongs.
+    string country_id = 2;
+
+    // UUID of the Region to which the Appellation belongs.
+    string region_id = 3;
+
+    // UUID of the Subregion to which the Appellation belongs.
+    string subregion_id = 4;
+  }
+
+  // Human-readable name of the Appellation.
+  string name = 5;
+
+  // Timestamp at which the Appellation was created.
+  google.protobuf.Timestamp created_at = 101;
+
+  // Timestamp at which the Appellation was last updated.
+  google.protobuf.Timestamp updated_at = 102;
+}

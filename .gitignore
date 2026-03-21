@@ -4,9 +4,10 @@ vendor/
 .env
 .vscode/
 .DS_Store
-<<<<<<< HEAD
-.bazelrc.user
-=======
+*.swp
+**/__pycache__/
+**/*.pyc
+package-lock.json
 
 # Bazel build outputs
 .bazelrc.user
@@ -15,6 +16,3 @@ bazel-backend
 bazel-bin
 bazel-out
 bazel-testlogs
-
->>>>>>> 1c2e3e0 (Initialize bazel workspace & update .gitignore)
-*.swp
