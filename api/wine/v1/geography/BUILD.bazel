@@ -1,3 +1,4 @@
+load("@rules_python//python:defs.bzl", "py_test")
 load("//api/wine:proto_def.bzl", "proto_libraries")
 
 GO_BASE = "github.com/stephen-sjrossman/wine-backend/api/wine/v1/geography"
@@ -9,6 +10,18 @@ proto_libraries(
     deps = [
         "@protobuf//:timestamp_proto",
         "@protovalidate//proto/protovalidate/buf/validate:validate_proto",
+    ],
+)
+
+py_test(
+    name = "appellation_test",
+    srcs = ["appellation_test.py"],
+    deps = [
+        ":appellation_py_proto",
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
     ],
 )
 
