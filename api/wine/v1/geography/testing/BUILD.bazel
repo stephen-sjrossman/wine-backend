@@ -1,0 +1,75 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+package(default_visibility = ["//visibility:public"])
+
+py_test(
+    name = "appellation_test",
+    srcs = ["appellation_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:appellation_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
+
+py_test(
+    name = "continent_test",
+    srcs = ["continent_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:continent_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
+
+py_test(
+    name = "country_test",
+    srcs = ["country_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:country_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
+
+py_test(
+    name = "region_test",
+    srcs = ["region_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:region_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
+
+py_test(
+    name = "subregion_test",
+    srcs = ["subregion_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:subregion_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
+
+py_test(
+    name = "vineyard_test",
+    srcs = ["vineyard_test.py"],
+    deps = [
+        "//api/wine:proto_validation_test",
+        "//api/wine:validate_py_proto",
+        "//api/wine/v1/geography:vineyard_py_proto",
+        "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
+    ],
+)
