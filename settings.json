@@ -1,4 +1,8 @@
 {
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/bazel-bin",
+    "${workspaceFolder}/bazel-out"
+  ],
   "[python]": {
     "editor.defaultFormatter": "eeyore.yapf",
     "editor.formatOnSave": true,
@@ -9,5 +13,9 @@
   },
   "ruff.enable": true,
   "ruff.nativeServer": true,
-  "ruff.lint.run": "onType"
+  "ruff.lint.run": "onType",
+  "ruff.lint.args": [
+    "--extend-select=TID252", 
+    "--namespace-packages"
+  ]
 }
