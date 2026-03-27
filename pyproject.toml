@@ -1,0 +1,17 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# "N" enables all pep8-naming rules
+# "I" enables import sorting (isort)
+select = ["N", "I", "E", "W", "F"]
+
+[tool.ruff.lint.pep8-naming]
+# These settings ensure Ruff respects your underscore preferences
+classmethod-decorators = ["classmethod"]
+staticmethod-decorators = ["staticmethod"]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+lines-after-imports = 2
