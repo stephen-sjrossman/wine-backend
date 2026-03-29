@@ -7,3 +7,12 @@ lint:
 breaking:
   use:
     - FILE
+build:
+  excludes:
+    - .bazel_cache
+    - .buf-deps
+    - .vscode
+    - bazel-backend
+    - bazel-bin
+    - bazel-out
+    - bazel-testlogs

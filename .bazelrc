@@ -10,5 +10,5 @@ build --verbose_failures
 # Allow developers to add personal overrides (like local cache paths)
 try-import %workspace%/.bazelrc.user
 
-# Only show warnings generated from this repo.
-build --per_file_copt=external/protobuf+/.*@-Wno-deprecated-declarations
+# Only show warnings/output from the workspace, ignore external dependencies.
+build --output_filter="^//"
