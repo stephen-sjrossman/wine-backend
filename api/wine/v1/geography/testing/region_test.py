@@ -68,10 +68,13 @@ def _build_region(
   return region
 
 
-class AppellationTest(proto_validation_test.ProtoValidationTest):
+class AppellationTest(proto_validation_test.ProtoValidationTest[region_pb2.Region]):
 
   def setUp(self):
     self.validator = protovalidate.Validator()
+
+  def _validator(self) -> protovalidate.Validator:
+    return self.validator
 
   def test_valid_region_passes(self):
     violations = self.validator.collect_violations(_build_region())
@@ -79,122 +82,74 @@ class AppellationTest(proto_validation_test.ProtoValidationTest):
     self.assertEqual(len(violations), 0)
 
   def test_region_with_empty_id_fails(self):
-    region = _build_region(id=None)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_region(id=None),
+        field_name='id',
+        violation='value is required',
+    )
 
   def test_region_with_invalid_id_fails(self):
-    region = _build_region(id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_region(id=_INVALID_UUID),
+        field_name='id',
+        violation='value must be a valid UUID',
+    )
 
   def test_region_with_empty_country_id_fails(self):
-    region = _build_region(country_id=None)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('container_violation'):
-      self.match_violations(violations, 'country_id', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_region(country_id=None),
+        field_name='country_id',
+        violation='value is required',
+    )
 
   def test_region_with_invalid_country_id_fails(self):
-    region = _build_region(country_id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('country_id_violation'):
-      self.match_violations(violations, 'country_id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_region(country_id=_INVALID_UUID),
+        field_name='country_id',
+        violation='value must be a valid UUID',
+    )
 
   def test_region_with_name_too_short_fails(self):
-    region = _build_region(name=_NAME_TOO_SHORT)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_region(name=_NAME_TOO_SHORT),
+        field_name='name',
+        violation='value is required',
+    )
 
   def test_region_with_name_too_long_fails(self):
-    region = _build_region(name=_NAME_TOO_LONG)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value length must be at most 255 characters'])
+    self.collect_and_assert_violations(
+        _build_region(name=_NAME_TOO_LONG),
+        field_name='name',
+        violation='value length must be at most 255 characters',
+    )
 
   def test_region_with_empty_created_at_fails(self):
-    region = _build_region(created_at=None)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(violations, 'created_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_region(created_at=None),
+        field_name='created_at',
+        violation='value is required',
+    )
 
   def test_region_with_created_at_too_early_fails(self):
-    region = _build_region(created_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(
-          violations,
-          'created_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_region(created_at=_TIME_TOO_EARLY),
+        field_name='created_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
   def test_region_with_empty_updated_at_fails(self):
-    region = _build_region(updated_at=None)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(violations, 'updated_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_region(updated_at=None),
+        field_name='updated_at',
+        violation='value is required',
+    )
 
   def test_region_with_updated_at_too_early_fails(self):
-    region = _build_region(updated_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(region)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(
-          violations,
-          'updated_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_region(updated_at=_TIME_TOO_EARLY),
+        field_name='updated_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
 
 if __name__ == '__main__':

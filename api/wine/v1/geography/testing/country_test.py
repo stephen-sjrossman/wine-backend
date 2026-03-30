@@ -84,10 +84,13 @@ def _build_country(
   return country
 
 
-class AppellationTest(proto_validation_test.ProtoValidationTest):
+class AppellationTest(proto_validation_test.ProtoValidationTest[country_pb2.Country]):
 
   def setUp(self):
     self.validator = protovalidate.Validator()
+
+  def _validator(self) -> protovalidate.Validator:
+    return self.validator
 
   def test_valid_country_passes(self):
     violations = self.validator.collect_violations(_build_country())
@@ -95,216 +98,126 @@ class AppellationTest(proto_validation_test.ProtoValidationTest):
     self.assertEqual(len(violations), 0)
 
   def test_country_with_empty_id_fails(self):
-    country = _build_country(id=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(id=None),
+        field_name='id',
+        violation='value is required',
+    )
 
   def test_country_with_invalid_id_fails(self):
-    country = _build_country(id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_country(id=_INVALID_UUID),
+        field_name='id',
+        violation='value must be a valid UUID',
+    )
 
   def test_country_with_empty_continent_id_fails(self):
-    country = _build_country(continent_id=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('container_violation'):
-      self.match_violations(violations, 'continent_id', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(continent_id=None),
+        field_name='continent_id',
+        violation='value is required',
+    )
 
   def test_country_with_invalid_continent_id_fails(self):
-    country = _build_country(continent_id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('continent_id_violation'):
-      self.match_violations(violations, 'continent_id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_country(continent_id=_INVALID_UUID),
+        field_name='continent_id',
+        violation='value must be a valid UUID',
+    )
 
   def test_country_with_name_too_short_fails(self):
-    country = _build_country(name=_NAME_TOO_SHORT)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(name=_NAME_TOO_SHORT),
+        field_name='name',
+        violation='value is required',
+    )
 
   def test_country_with_name_too_long_fails(self):
-    country = _build_country(name=_NAME_TOO_LONG)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value length must be at most 255 characters'])
+    self.collect_and_assert_violations(
+        _build_country(name=_NAME_TOO_LONG),
+        field_name='name',
+        violation='value length must be at most 255 characters',
+    )
 
   def test_country_with_empty_iso_code_fails(self):
-    country = _build_country(iso_code=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('iso_code_violation'):
-      self.match_violations(violations, 'iso_code', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(iso_code=None),
+        field_name='iso_code',
+        violation='value is required',
+    )
 
   def test_country_with_iso_code_too_short_fails(self):
-    country = _build_country(iso_code=_ISO_CODE_TOO_SHORT)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('iso_code_violation'):
-      self.match_violations(
-          violations,
-          'iso_code',
-          ['value does not match regex pattern `^[A-Z]{2}$`'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(iso_code=_ISO_CODE_TOO_SHORT),
+        field_name='iso_code',
+        violation='value does not match regex pattern `^[A-Z]{2}$`',
+    )
 
   def test_country_with_iso_code_too_long_fails(self):
-    country = _build_country(iso_code=_ISO_CODE_TOO_LONG)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('iso_code_violation'):
-      self.match_violations(
-          violations,
-          'iso_code',
-          ['value does not match regex pattern `^[A-Z]{2}$`'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(iso_code=_ISO_CODE_TOO_LONG),
+        field_name='iso_code',
+        violation='value does not match regex pattern `^[A-Z]{2}$`',
+    )
 
   def test_country_with_iso_code_containing_invalid_chars_fails(self):
-    country = _build_country(iso_code=_ISO_CODE_INVALID_CHARS)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('iso_code_violation'):
-      self.match_violations(
-          violations,
-          'iso_code',
-          ['value does not match regex pattern `^[A-Z]{2}$`'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(iso_code=_ISO_CODE_INVALID_CHARS),
+        field_name='iso_code',
+        violation='value does not match regex pattern `^[A-Z]{2}$`',
+    )
 
   def test_country_with_empty_flag_url_fails(self):
-    country = _build_country(flag_url=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('flag_url_violation'):
-      self.match_violations(violations, 'flag_url', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(flag_url=None),
+        field_name='flag_url',
+        violation='value is required',
+    )
 
   def test_country_with_invalid_flag_url_fails(self):
-    country = _build_country(flag_url=_FLAG_URL_INVALID)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('flag_url_violation'):
-      self.match_violations(
-          violations,
-          'flag_url',
-          ['value must be a valid URI'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(flag_url=_FLAG_URL_INVALID),
+        field_name='flag_url',
+        violation='value must be a valid URI',
+    )
 
   def test_country_with_empty_metadata_fails(self):
     country = _build_country()
     country.ClearField('metadata')
 
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('metadata_violation'):
-      self.match_violations(violations, 'metadata', ['value is required'])
+    self.collect_and_assert_violations(
+        country,
+        field_name='metadata',
+        violation='value is required',
+    )
 
   def test_country_with_empty_created_at_fails(self):
-    country = _build_country(created_at=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(violations, 'created_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(created_at=None),
+        field_name='created_at',
+        violation='value is required',
+    )
 
   def test_country_with_created_at_too_early_fails(self):
-    country = _build_country(created_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(
-          violations,
-          'created_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(created_at=_TIME_TOO_EARLY),
+        field_name='created_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
   def test_country_with_empty_updated_at_fails(self):
-    country = _build_country(updated_at=None)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(violations, 'updated_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_country(updated_at=None),
+        field_name='updated_at',
+        violation='value is required',
+    )
 
   def test_country_with_updated_at_too_early_fails(self):
-    country = _build_country(updated_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(country)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(
-          violations,
-          'updated_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_country(updated_at=_TIME_TOO_EARLY),
+        field_name='updated_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
 
 if __name__ == '__main__':

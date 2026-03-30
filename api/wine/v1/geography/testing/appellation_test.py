@@ -78,10 +78,13 @@ def _build_appellation(
   return appellation
 
 
-class AppellationTest(proto_validation_test.ProtoValidationTest):
+class AppellationTest(proto_validation_test.ProtoValidationTest[appellation_pb2.Appellation]):
 
   def setUp(self):
     self.validator = protovalidate.Validator()
+
+  def _validator(self) -> protovalidate.Validator:
+    return self.validator
 
   def test_valid_appellation_passes(self):
     violations = self.validator.collect_violations(_build_appellation())
@@ -89,144 +92,88 @@ class AppellationTest(proto_validation_test.ProtoValidationTest):
     self.assertEqual(len(violations), 0)
 
   def test_appellation_with_empty_id_fails(self):
-    appellation = _build_appellation(id=None)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_appellation(id=None),
+        field_name='id',
+        violation='value is required',
+    )
 
   def test_appellation_with_invalid_id_fails(self):
-    appellation = _build_appellation(id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('id_violation'):
-      self.match_violations(violations, 'id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_appellation(id=_INVALID_UUID),
+        field_name='id',
+        violation='value must be a valid UUID',
+    )
 
   def test_appellation_with_no_container_fails(self):
-    appellation = _build_appellation(country_id=None)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('container_violation'):
-      self.match_violations(violations, 'container', ['exactly one field is required in oneof'])
+    self.collect_and_assert_violations(
+        _build_appellation(country_id=None),
+        field_name='container',
+        violation='exactly one field is required in oneof',
+    )
 
   def test_appellation_with_invalid_country_id_fails(self):
-    appellation = _build_appellation(country_id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('country_id_violation'):
-      self.match_violations(violations, 'country_id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_appellation(country_id=_INVALID_UUID),
+        field_name='country_id',
+        violation='value must be a valid UUID',
+    )
 
   def test_appellation_with_invalid_region_id_fails(self):
-    appellation = _build_appellation(country_id=None, region_id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('region_id_violation'):
-      self.match_violations(violations, 'region_id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_appellation(country_id=None, region_id=_INVALID_UUID),
+        field_name='region_id',
+        violation='value must be a valid UUID',
+    )
 
   def test_appellation_with_invalid_subregion_id_fails(self):
-    appellation = _build_appellation(country_id=None, subregion_id=_INVALID_UUID)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('subregion_id_violation'):
-      self.match_violations(violations, 'subregion_id', ['value must be a valid UUID'])
+    self.collect_and_assert_violations(
+        _build_appellation(country_id=None, subregion_id=_INVALID_UUID),
+        field_name='subregion_id',
+        violation='value must be a valid UUID',
+    )
 
   def test_appellation_with_name_too_short_fails(self):
-    appellation = _build_appellation(name=_NAME_TOO_SHORT)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_appellation(name=_NAME_TOO_SHORT),
+        field_name='name',
+        violation='value is required',
+    )
 
   def test_appellation_with_name_too_long_fails(self):
-    appellation = _build_appellation(name=_NAME_TOO_LONG)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('name_violation'):
-      self.match_violations(violations, 'name', ['value length must be at most 255 characters'])
+    self.collect_and_assert_violations(
+        _build_appellation(name=_NAME_TOO_LONG),
+        field_name='name',
+        violation='value length must be at most 255 characters',
+    )
 
   def test_appellation_with_created_at_empty_fails(self):
-    appellation = _build_appellation(created_at=None)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(violations, 'created_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_appellation(created_at=None),
+        field_name='created_at',
+        violation='value is required',
+    )
 
   def test_appellation_with_created_at_too_early_fails(self):
-    appellation = _build_appellation(created_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('created_at_violation'):
-      self.match_violations(
-          violations,
-          'created_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_appellation(created_at=_TIME_TOO_EARLY),
+        field_name='created_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
   def test_appellation_with_updated_at_empty_fails(self):
-    appellation = _build_appellation(updated_at=None)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(violations, 'updated_at', ['value is required'])
+    self.collect_and_assert_violations(
+        _build_appellation(updated_at=None),
+        field_name='updated_at',
+        violation='value is required',
+    )
 
   def test_appellation_with_updated_at_too_early_fails(self):
-    appellation = _build_appellation(updated_at=_TIME_TOO_EARLY)
-
-    violations = self.validator.collect_violations(appellation)
-
-    with self.subTest('violation_count'):
-      self.assertEqual(len(violations), 1)
-
-    with self.subTest('updated_at_violation'):
-      self.match_violations(
-          violations,
-          'updated_at',
-          ['value must be greater than or equal to 2026-01-01T00:00:00Z'],
-      )
+    self.collect_and_assert_violations(
+        _build_appellation(updated_at=_TIME_TOO_EARLY),
+        field_name='updated_at',
+        violation='value must be greater than or equal to 2026-01-01T00:00:00Z',
+    )
 
 
 if __name__ == '__main__':

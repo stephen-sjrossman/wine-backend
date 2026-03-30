@@ -12,6 +12,8 @@ py_library(
     srcs = ["proto_validation_test.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":validate_py_proto",
         "@pip_deps//protovalidate",
+        "@protobuf//:well_known_types_py_pb2",
     ],
 )
